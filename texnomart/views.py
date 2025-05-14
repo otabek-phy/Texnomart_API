@@ -2,14 +2,21 @@ from .serializers import RegisterSerializer
 from rest_framework import generics
 from .models import Category, Product
 from .serializers import CategorySerializer, ProductSerializer
-from rest_framework.permissions import IsAuthenticated
 from .serializers import ProductCreateSerializer, ProductImageUploadSerializer, OrderSerializer
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 from .models import Cart, CartItem, Order
 from .serializers import CartSerializer, CartItemSerializer
+from rest_framework.generics import CreateAPIView, DestroyAPIView
+from .models import Cart
+from .serializers import CartSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Order
+from rest_framework import status
+
+
+
+
 
 class RegisterView(APIView):
     def post(self, request):
@@ -121,3 +128,27 @@ class OrderPaymentAPIView(APIView):
         order.save()
 
         return Response(OrderSerializer(order).data, status=status.HTTP_200_OK)
+
+
+
+class CartAddAPIView(CreateAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+
+class CartDeleteAPIView(DestroyAPIView):
+    queryset = Cart.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Cart.objects.filter(user=self.request.user)
+
+
+
+
+

@@ -19,7 +19,8 @@ urlpatterns = [
     path('cart/add/', CartItemAddAPIView.as_view(), name='cart-item-add'),
     path('cart/delete/<int:item_id>/', CartItemDeleteAPIView.as_view(), name='cart-item-delete'),
 
+
     # buyurtma qilish
     path('order/create/', OrderCreateAPIView.as_view(), name='order-create'),
-    path('order/payment/<int:order_id>/', OrderPaymentAPIView.as_view(), name='order-payment'),
+    path('order/pay/<int:order_id>/', OrderPaymentAPIView.as_view(), name='order-pay'),
 ]
